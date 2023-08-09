@@ -1,0 +1,428 @@
+'use client';
+import { useRouter } from 'next/navigation';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { defaultValues, resolver, FormData } from '../schema';
+import { registerImmobile } from '@/services/immobiles/create';
+import Loanding from '@/components/loading';
+import { useAuthContext } from '@/context/authContext';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowLeft } from '@phosphor-icons/react';
+
+export default function FormRegisterImmobile() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [baseImage, setBaseImage] = useState<string[]>([]);
+  const [isFieldFilled, setIsFieldFilled] = useState(false);
+  const router = useRouter();
+  const { user } = useAuthContext();
+
+  const {
+    handleSubmit,
+    register,
+    setValue,
+    reset,
+    formState: { errors, isDirty },
+    control,
+  } = useForm<FormData>({
+    resolver,
+    defaultValues,
+  });
+  console.log(errors);
+
+  const UploadImage = async (e: any) => {
+    const files = e.target.files;
+    const uploadedImages: string[] = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const base64 = await convertBase64(file);
+      uploadedImages.push(base64 as string);
+    }
+
+    setBaseImage(uploadedImages);
+  };
+
+  const convertBase64 = (file: File) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  const role = 'CORRETOR';
+
+  const onSubmitCreateImmobile = async (data: FormData) => {
+    setLoading(true);
+    console.log('DATA =>', data);
+    if (role && user.perfil)
+      registerImmobile(data)
+        .then((res) => {
+          if (res) router.push('/immobiles');
+        })
+        .catch(() => console.error('Unauthorized'))
+        .finally(() => setLoading(false));
+    reset();
+  };
+
+  useEffect(() => {
+    setValue('images', baseImage); // Assuming you have access to setValue from useForm
+  }, [baseImage, setValue]);
+
+  return (
+    <>
+      <div className="w-full flex p-3">
+        <Link
+          href={'/immobiles'}
+          className="flex items-center gap-1 border-b-2 border-medium_secondary mt-2"
+        >
+          <ArrowLeft size={20} className="text-dark_blue" />
+          <p className="text-dark_blue">Voltar</p>
+        </Link>
+      </div>
+      <form
+        onSubmit={handleSubmit(onSubmitCreateImmobile)}
+        className="w-4/5 flex flex-col items-center gap-4 desktop:w-[90%] iphone_SE:gap-3 iphone_XR:w-[90%]"
+      >
+        <h2 className="font-semibold text-4xl text-dark_blue mt-8">
+          Cadastro de imóveis
+        </h2>
+
+        <div className="w-[90%] flex items-center gap-4 mt-6 iphone_XR:flex-col ipad:flex-col iphone_SE:mt-2">
+          <div
+            className="w-full flex flex-col items-center relative mb-3 laptop:w-[90%] ipad:w-[90%] iphone_XR:w-full iphone_SE:mb-0"
+            data-te-input-wrapper-init
+          >
+            <Controller
+              name="area"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <input
+                    className="peer block min-h-[auto] w-full h-12 rounded-lg border-2 border-zinc-300  px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary focus:border-blue-300 focus:outline-none"
+                    type="number"
+                    {...field}
+                    value={field.value ?? ''}
+                    onChange={(e) => {
+                      field.onChange(parseInt(e.target.value));
+                      setIsFieldFilled(!!e.target.value);
+                    }}
+                  />
+                );
+              }}
+            />
+            <label
+              htmlFor="area"
+              className={`pointer-events-none absolute bg-transparent left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] text-neutral-500 transition-all duration-200 ease-out ${
+                isFieldFilled ? '-translate-y-[0.9rem] scale-[0.8]' : ''
+              } peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8]  peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-focus:bg-zinc-100
+  peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary`}
+            >
+              Área
+            </label>
+            {errors.area?.message && (
+              <p className="text-xs text-red-500 mt-2">{errors.area.message}</p>
+            )}
+          </div>
+
+          <div
+            className="w-full flex flex-col items-center relative mb-3 laptop:w-[90%] ipad:w-[90%] iphone_XR:w-full iphone_SE:mb-0"
+            data-te-input-wrapper-init
+          >
+            <Controller
+              name="quantidadeQuartos"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <input
+                    className="peer block min-h-[auto] w-full h-12 rounded-lg border-2 border-zinc-300  px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary focus:border-blue-300 focus:outline-none"
+                    type="number"
+                    {...field}
+                    value={field.value ?? ''}
+                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  />
+                );
+              }}
+            />
+            <label
+              htmlFor="Nº de quartos"
+              className="pointer-events-none absolute bg-transparent left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem]  text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8]  peer-data-[te-input-state-active]:-translate-y-[0.9rem] 
+          peer-focus:bg-zinc-100
+          peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+            >
+              Nº de quartos
+            </label>
+            {errors.quantidadeQuartos?.message && (
+              <p className="text-xs text-red-500 mt-2">
+                {errors.quantidadeQuartos.message}
+              </p>
+            )}
+          </div>
+
+          <div
+            className="w-full flex flex-col items-center relative mb-3 laptop:w-[90%] ipad:w-[90%] iphone_XR:w-full iphone_SE:mb-1"
+            data-te-input-wrapper-init
+          >
+            <Controller
+              name="preco"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <input
+                    className="peer block min-h-[auto] w-full h-12 rounded-lg border-2 border-zinc-300  px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary focus:border-blue-300 focus:outline-none"
+                    type="number"
+                    {...field}
+                    value={field.value ?? ''}
+                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  />
+                );
+              }}
+            />
+            <label
+              htmlFor="preco"
+              className="pointer-events-none absolute bg-transparent left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem]  text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8]  peer-data-[te-input-state-active]:-translate-y-[0.9rem] 
+          peer-focus:bg-zinc-100
+          peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+            >
+              Preço
+            </label>
+            {errors.preco?.message && (
+              <p className="text-xs text-red-500 mt-2">
+                {errors.preco.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="w-[90%] flex items-center gap-4 iphone_XR:flex-col">
+          <div className="w-full flex flex-col justify-center items-center">
+            <select
+              className="w-full h-12 border-2 border-zinc-200 rounded-lg focus:border-blue-400 focus:outline-none"
+              {...register('tipoContrato')}
+            >
+              <option value="Tipo de Contrato" disabled>
+                Tipo de contrato
+              </option>
+              <option value="VENDA">VENDA</option>
+              <option value="ALUGUEL">ALUGUEL</option>
+            </select>
+            {errors.tipoContrato?.message && (
+              <p className="text-xs text-red-500 mt-2">
+                {errors.tipoContrato.message}
+              </p>
+            )}
+          </div>
+
+          <div className="w-full flex flex-col justify-center items-center">
+            <select
+              className="w-full h-12 border-2 border-zinc-200 rounded-lg focus:border-blue-400 focus:outline-none"
+              {...register('status')}
+            >
+              <option value="Status Imóvel" disabled>
+                Status Imóvel
+              </option>
+              <option value="ALUGADO">ALUGADO</option>
+              <option value="VENDIDO">VENDIDO</option>
+              <option value="NEGOCIACAO">NEGOCIACAO</option>
+              <option value="PENDENTE">PENDENTE</option>
+            </select>
+            {errors.status?.message && (
+              <p className="text-xs text-red-500 mt-2">
+                {errors.status.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="w-[90%] flex items-center gap-4 iphone_XR:flex-col ipad:flex-col">
+          <div
+            className="w-full flex flex-col items-center relative mb-3 laptop:w-[90%] ipad:w-[90%] iphone_XR:w-full iphone_SE:mb-1"
+            data-te-input-wrapper-init
+          >
+            <input
+              className="peer block min-h-[auto] w-full h-12 rounded-lg border-2 border-zinc-300  px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary focus:border-blue-300 focus:outline-none"
+              id="rua"
+              type="text"
+              {...register('endereco.rua')}
+            />
+            <label
+              htmlFor="rua"
+              className="pointer-events-none absolute bg-transparent left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem]  text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8]  peer-data-[te-input-state-active]:-translate-y-[0.9rem] 
+          peer-focus:bg-zinc-100
+          peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+            >
+              Rua
+            </label>
+            {errors.endereco?.rua?.message && (
+              <p className="text-xs text-red-500 mt-2">
+                {errors.endereco.rua.message}
+              </p>
+            )}
+          </div>
+
+          <div
+            className="w-full flex flex-col items-center relative mb-3 laptop:w-[90%] ipad:w-[90%] iphone_XR:w-full iphone_SE:mb-0 mt-0"
+            data-te-input-wrapper-init
+          >
+            <input
+              className="peer block min-h-[auto] w-full h-12 rounded-lg border-2 border-zinc-300  px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary focus:border-blue-300 focus:outline-none"
+              id="bairro"
+              type="text"
+              {...register('endereco.bairro')}
+            />
+            <label
+              htmlFor="bairro"
+              className="pointer-events-none absolute bg-transparent left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem]  text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8]  peer-data-[te-input-state-active]:-translate-y-[0.9rem] 
+          peer-focus:bg-zinc-100
+          peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+            >
+              Bairro
+            </label>
+            {errors.endereco?.bairro?.message && (
+              <p className="text-xs text-red-500 mt-2">
+                {errors.endereco.bairro.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="w-[90%] flex items-center gap-4 iphone_XR:flex-col ipad:flex-col iphone_SE:gap-2">
+          <div
+            className="w-full flex flex-col items-center relative mb-3 laptop:w-[90%] ipad:w-[90%] iphone_XR:w-full"
+            data-te-input-wrapper-init
+          >
+            <Controller
+              name="endereco.numero"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <input
+                    className="peer block min-h-[auto] w-full h-12 rounded-lg border-2 border-zinc-300  px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary focus:border-blue-300 focus:outline-none"
+                    type="number"
+                    {...field}
+                    value={field.value ?? ''}
+                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  />
+                );
+              }}
+            />
+            <label
+              htmlFor="endereco.numero"
+              className="pointer-events-none absolute bg-transparent left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem]  text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8]  peer-data-[te-input-state-active]:-translate-y-[0.9rem] 
+          peer-focus:bg-zinc-100
+          peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+            >
+              Número
+            </label>
+            {errors.area?.message && (
+              <p className="text-xs text-red-500 mt-2">{errors.area.message}</p>
+            )}
+          </div>
+
+          <div
+            className="w-full flex flex-col items-center relative mb-3 laptop:w-[90%] ipad:w-[90%] iphone_XR:w-full iphone_SE:mb-1"
+            data-te-input-wrapper-init
+          >
+            <input
+              className="peer block min-h-[auto] w-full h-12 rounded-lg border-2 border-zinc-300  px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary focus:border-blue-300 focus:outline-none"
+              id="cep"
+              type="text"
+              {...register('endereco.cep')}
+            />
+            <label
+              htmlFor="cep"
+              className="pointer-events-none absolute bg-transparent left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem]  text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8]  peer-data-[te-input-state-active]:-translate-y-[0.9rem] 
+          peer-focus:bg-zinc-100
+          peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+            >
+              CEP
+            </label>
+            {errors.endereco?.cep?.message && (
+              <p className="text-xs text-red-500 mt-2">
+                {errors.endereco.cep.message}
+              </p>
+            )}
+          </div>
+
+          <div
+            className="w-full flex flex-col items-center relative mb-3 laptop:w-[90%] ipad:w-[90%] iphone_XR:w-full iphone_SE:mb-1"
+            data-te-input-wrapper-init
+          >
+            <input
+              className="peer block min-h-[auto] w-full h-12 rounded-lg border-2 border-zinc-300  px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary focus:border-blue-300 focus:outline-none"
+              id="cidade"
+              type="text"
+              {...register('endereco.cidade')}
+            />
+            <label
+              htmlFor="cidade"
+              className="pointer-events-none absolute bg-transparent left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem]  text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8]  peer-data-[te-input-state-active]:-translate-y-[0.9rem] 
+          peer-focus:bg-zinc-100
+          peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+            >
+              Cidade
+            </label>
+            {errors.endereco?.cidade?.message && (
+              <p className="text-xs text-red-500 mt-2">
+                {errors.endereco.cidade.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="w-[90%]">
+          <Controller
+            name="images"
+            control={control}
+            defaultValue={[]}
+            render={({ field }) => {
+              const handleImagesChange = async (
+                e: ChangeEvent<HTMLInputElement>,
+              ) => {
+                field.onChange(e);
+                UploadImage(e);
+              };
+
+              const inputProps = {
+                ...field,
+                onChange: handleImagesChange,
+                value: undefined, // Set the value to undefined or null
+              };
+
+              return (
+                <div className="w-[40%] h-60 relative border-2 border-zinc-400 iphone_SE:w-[100%] iphone_XR:w-[100%]">
+                  {baseImage.map((image, index) => (
+                    <Image
+                      key={index}
+                      src={image}
+                      alt={`Uploaded Image ${index}`}
+                      className="w-full h-full object-cover"
+                      width={200}
+                      height={200}
+                    />
+                  ))}
+                  <input type="file" {...inputProps} />
+                </div>
+              );
+            }}
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="flex justify-center items-center w-3/5 h-12 border-2 rounded-lg bg-light_blue text-white mt-6 focus:border-blue-300 focus:outline-none iphone_XR:w-[90%] ipad:w-[90%]"
+        >
+          {loading ? <Loanding /> : 'Enviar'}
+        </button>
+      </form>
+    </>
+  );
+}
