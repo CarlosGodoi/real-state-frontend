@@ -4,3 +4,8 @@ export enum StatusImovel {
   ALUGADO = "ALUGADO",
   PENDENTE = "PENDENTE",
 }
+
+export enum TipoContrato {
+  VENDA = 'VENDA',
+  ALUGUEL = 'ALUGUEL'
+}

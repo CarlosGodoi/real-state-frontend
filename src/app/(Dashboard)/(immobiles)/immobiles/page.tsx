@@ -35,6 +35,8 @@ export default function Immobiles() {
   const [immobiles, setImmobiles] = useState<IImmobiles[]>([]);
   const { handleTab, tab } = useImmobilesContext();
   const router = useRouter();
+  console.log(immobiles);
+  
 
   useEffect(() => {
     getAllImmobiles().then((res: { imoveis: IImmobiles[]; total: number }) => {
@@ -48,7 +50,7 @@ export default function Immobiles() {
         <h2 className="font-serif text-6xl text-white mb-10 iphone_XR:text-4xl text-center">
           Encontre seu Imóvel
         </h2>
-        <div className="w-[40%] flex items-center justify-center bg-white rounded-xl ipad:w-[60%] iphone_XR:w-[60%] iphone_SE:w-full">
+        <div className="w-[40%] flex items-center justify-center bg-white rounded-xl laptop:w-[75%] ipad:w-[60%] iphone_XR:w-[80%] iphone_SE:w-[90%]">
           {tab.map(({ active, label, value }, index) => {
             return (
               <button
@@ -72,7 +74,7 @@ export default function Immobiles() {
         <div className="w-[40%] flex items-center justify-center mt-6 iphone_SE:w-full iphone_XR:w-full">
           <button
             type="button"
-            className="w-[50%] h-8 rounded-full font-medium text-zinc-900 bg-dark_secondary hover:bg-medium_secondary iphone_SE:w-[70%] iphone_XR:w-[70%]"
+            className="w-[50%] h-8 rounded-full font-medium text-zinc-900 bg-dark_secondary hover:bg-medium_secondary desktop:w-[70%] laptop:w-[80%] iphone_SE:w-[70%] iphone_XR:w-[60%]"
             onClick={() => router.push('/releases')}
           >
             Confira nossos lançamentos

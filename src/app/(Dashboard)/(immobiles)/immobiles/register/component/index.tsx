@@ -22,7 +22,7 @@ export default function FormRegisterImmobile() {
     register,
     setValue,
     reset,
-    formState: { errors, isDirty },
+    formState: { errors },
     control,
   } = useForm<FormData>({
     resolver,
@@ -74,7 +74,7 @@ export default function FormRegisterImmobile() {
   };
 
   useEffect(() => {
-    setValue('images', baseImage); // Assuming you have access to setValue from useForm
+    setValue('images', baseImage);
   }, [baseImage, setValue]);
 
   return (

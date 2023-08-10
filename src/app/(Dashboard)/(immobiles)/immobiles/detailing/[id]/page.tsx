@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { FormEditImmobile } from '../component';
 import { useForm } from 'react-hook-form';
 import { FormData, defaultValues, resolver } from '../schema';
-import { StatusImovel } from '@/utils/selectEnum';
+import { StatusImovel, TipoContrato } from '@/utils/selectEnum';
 
 interface IParams {
   params: {
@@ -139,12 +139,12 @@ export default function DetailingImmobiles({ params }: IParams) {
               </div>
               <div className="w-full flex flex-col iphone_SE:w-[90%] iphone_XR:w-[90%]">
                 <label htmlFor="tipoContrato">Contrato</label>
-                <select className="rounded-lg">
-                  <option value="tipoContrato" disabled>
-                    Tipo contrato
-                  </option>
-                  <option value="VENDA">VENDA</option>
-                  <option value="ALUGUEL">ALUGUEL</option>
+                <select className="rounded-lg" {...register('tipoContrato')} name='tipoContrato'>
+                {Object.values(TipoContrato).map((contrato) => (
+                    <option key={contrato} value={contrato}>
+                      {contrato}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

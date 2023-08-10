@@ -97,6 +97,39 @@ if(expiresIn < now){
       );
     }
   }
+
+  try {
+    const response = await api.post("/imovel/images",{...data},{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    })
+
+    // const refresh = response.headers["set-cookie"]?.toString().split(";")[0].split("=")[1] as string
+
+    const result = NextResponse.json(  {
+        ...response.data,
+      },
+      {
+        status: 200,
+      })
+
+      result.cookies.set("usuario",JSON.stringify(response.data.usuario))
+      result.cookies.set("token",response.data.token)
+      // result.cookies.set("refresh",refresh)
+
+      return result
+
+
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.log("response =>",error)
+      return NextResponse.json(
+        { error: error.response?.data.error },
+        { status: error.response?.status }
+      );
+    }
+  }
   
  }
 
