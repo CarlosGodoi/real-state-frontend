@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import { PageBack } from '@/components/pageBack';
-import { FormContact } from './component/form';
+import { PageBack } from "@/components/pageBack";
+import { FormContact } from "./component/form";
 
 export default function Contact() {
   return (
@@ -11,7 +11,9 @@ export default function Contact() {
           Central de contato RealState
         </h2>
       </div>
-      <div className='ml-4'><PageBack /></div>
+      <div className="ml-4">
+        <PageBack href="/immobiles" />
+      </div>
       <FormContact />
     </section>
   );

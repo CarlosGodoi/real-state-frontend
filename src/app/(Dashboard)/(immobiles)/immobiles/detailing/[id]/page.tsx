@@ -98,7 +98,7 @@ export default function DetailingImmobiles({ params }: IParams) {
 
   return (
     <div className="w-full flex flex-col bg-zinc-50">
-      <PageBack />
+      <PageBack href="/releases" />
       <div className="w-full flex flex-col items-center">
         <h2 className="font-normal text-center text-3xl text-medium_blue mt-6">
           Detalhamento do imóvel

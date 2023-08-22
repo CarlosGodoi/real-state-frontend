@@ -53,7 +53,7 @@ export default function RegisterBroker() {
   return (
     <Container>
       <div className="w-full flex p-3">
-        <PageBack />
+        <PageBack href="/immobiles" />
       </div>
       <form
         onSubmit={handleSubmit(onSubmitCreateAccount)}
