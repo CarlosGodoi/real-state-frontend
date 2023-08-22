@@ -1,16 +1,19 @@
-import {apiFront as api} from "../api"
+import { apiFront as api } from "../api";
 
-interface ICreateImmobile {
-  id: string,
-  preco: number | null,
-  tipoContrato: string,
-  status: string,
+interface IEditImmobile {
+  preco: number | null;
+  tipoContrato: string;
+  status: string;
 }
 
-export const registerImmobile = async (data: ICreateImmobile) => {
+export const editImmobile = async (imovelId: string, data: IEditImmobile) => {
   try {
-    return api.post<ICreateImmobile>(`/api/immobiles/${data.id}`, data)
+    return api.put<IEditImmobile>(`/api/immobiles/${imovelId}`, {
+      preco: data.preco,
+      tipoContrato: data.tipoContrato,
+      status: data.status,
+    });
   } catch (error) {
-    Promise.reject(error)
+    Promise.reject(error);
   }
-}
+};

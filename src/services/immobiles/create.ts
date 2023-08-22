@@ -1,27 +1,26 @@
-import {apiFront as api} from "../api"
+import { apiFront as api } from "../api";
 
 interface IAddress {
-  rua: string,
-  bairro: string,
-  cidade: string,
-  numero: number | null,
-  cep: string,
+  rua: string;
+  bairro: string;
+  cidade: string;
+  numero: number | null;
+  cep: string;
 }
 
 interface ICreateImmobile {
-  quantidadeQuartos: number | null,
-  area: number | null,
-  preco: number | null,
-  tipoContrato: string,
-  status: string,
-  endereco: IAddress
-  images:string[] | null
+  quantidadeQuartos: number | null;
+  area: number | null;
+  preco: number | null;
+  tipoContrato: string;
+  status: string;
+  endereco: IAddress;
 }
 
 export const registerImmobile = async (data: ICreateImmobile) => {
   try {
-    return api.post<ICreateImmobile>('/api/immobiles', data)
+    return api.post<ICreateImmobile>("/api/immobiles", data);
   } catch (error) {
-    Promise.reject(error)
+    Promise.reject(error);
   }
-}
+};

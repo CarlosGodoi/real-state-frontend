@@ -1,13 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-const immobileSchema = z
+const editImmobileSchema = z
   .object({
     quantidadeQuartos: z.number().nullable(),
     area: z.number().nullable(),
     preco: z.number().nullable(),
     tipoContrato: z.enum(["VENDA", "ALUGUEL"]),
     status: z.enum(["NEGOCIACAO", "VENDIDO", "ALUGADO", "PENDENTE"]),
+    images: z.array(z.string()).nullable(),
     endereco: z.object({
       rua: z.string().trim().min(1, { message: "Rua é obrigatório." }),
       bairro: z.string().trim().min(1, { message: "Rua é obrigatório." }),
@@ -18,9 +19,9 @@ const immobileSchema = z
   })
   .required();
 
-export const resolver = zodResolver(immobileSchema);
+export const resolver = zodResolver(editImmobileSchema);
 
-export type FormData = z.infer<typeof immobileSchema>;
+export type FormData = z.infer<typeof editImmobileSchema>;
 
 export const defaultValues: FormData = {
   quantidadeQuartos: null,
@@ -28,6 +29,7 @@ export const defaultValues: FormData = {
   preco: null,
   tipoContrato: "ALUGUEL",
   status: "PENDENTE",
+  images: ([] as string[]) || null,
   endereco: {
     rua: "",
     bairro: "",

@@ -3,11 +3,12 @@
 import { IImmobiles } from '@/app/interfaces/GetImmobiles';
 import Loanding from '@/components/loading';
 import { Search } from '@/components/search';
-import { useImmobilesContext } from '@/context/ImmobilesContext';
 import { useRequest } from '@/context/apiRequestContext';
-import { ArrowLeft, Bed, Ruler } from '@phosphor-icons/react';
+import useDebounce from '@/hooks/useDebounce';
+import { ArrowLeft, Bed, Ruler, Trash } from '@phosphor-icons/react';
 import Image from 'next/image';
 import Link from 'next/link';
+
 import { useEffect, useState } from 'react';
 
 interface IParams {
@@ -17,12 +18,14 @@ interface IParams {
 }
 
 export default function Page({ params }: IParams) {
-  const { searchImmobiles, handleSearch } = useImmobilesContext();
-  const [resultTabImmobiles, setResultTabImmobiles] = useState<IImmobiles[]>(
-    [],
-  );
+  const [resultTabImmobiles, setResultTabImmobiles] = useState<IImmobiles[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const { apiRequest } = useRequest();
+
+  const [search, setSearch] = useState('');
+
+
+  const debouncedSearch = useDebounce(search);
 
   useEffect(() => {
     (async () => {
@@ -38,7 +41,33 @@ export default function Page({ params }: IParams) {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.tipoContrato]);
-  console.log('Imoveis=>', resultTabImmobiles);
+
+  const handleSearch = async () => {
+    await apiRequest('get', '/api/immobiles', {
+      params: {
+        search: { tipoContrato: params.tipoContrato },
+      },
+    })
+      .then((resp) => {
+        setResultTabImmobiles(resp.data.imoveis);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    (async () => {
+      await apiRequest('get', '/api/immobiles', {
+        params: {
+          search: debouncedSearch,
+        },
+      })
+        .then((resp) => {
+          setResultTabImmobiles(resp.data.imoveis);
+        })
+        .catch((err) => console.log(err));
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch]);
 
   return (
     <>
@@ -53,9 +82,9 @@ export default function Page({ params }: IParams) {
       </div>
       <div className="w-full flex justify-center pt-9 pb-6">
         <Search
-          value=""
-          handleChange={({ target: { value } }) => handleSearch(value)}
-          onClick={() => console.log('clicou')}
+          value={search}
+          handleChange={({ target: { value } }) => setSearch(value)}
+          onClick={handleSearch}
         />
       </div>
       <div className="w-full flex flex-wrap justify-center gap-3 pt-4 pb-4 bg-zinc-100 m-auto relative">
@@ -98,6 +127,9 @@ export default function Page({ params }: IParams) {
                   </div>
                 </div>
                 <div className="w-full flex flex-col items-center gap-1 pt-2 pb-2 bg-zinc-900 border-2">
+                  <div className='w-full flex justify-end mr-3'>
+                    <Trash size={25} className='text-white font-bold cursor-pointer' onClick={()=> console.log('clicou')}/>
+                  </div>
                   <p className="font-normal text-sm text-white">A partir de:</p>
                   <span className="font-body text-white">
                     R${immobile.preco}

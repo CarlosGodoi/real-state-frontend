@@ -1,13 +1,14 @@
 'use client';
 import { IImmobiles } from '@/app/interfaces/GetImmobiles';
 import Loanding from '@/components/loading';
+import { PageBack } from '@/components/pageBack';
 import { Search } from '@/components/search';
 import { useRequest } from '@/context/apiRequestContext';
 import useDebounce from '@/hooks/useDebounce';
+import { deleteImmobileById } from '@/services/immobiles/delete';
 import { getAllImmobiles } from '@/services/immobiles/getAll';
-import { ArrowLeft, Bed, Ruler } from '@phosphor-icons/react';
+import { Bed, Ruler, Trash } from '@phosphor-icons/react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -69,16 +70,28 @@ export default function Releases() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch]);
 
+  const handleDelete = async (id: string) => {
+    const idSelected = allImmobiles.findIndex((item) => item.id === id);
+
+    try {
+      if (idSelected !== -1) {
+        const newListImmobiles = allImmobiles.filter(immobile => immobile.id !== id);
+  
+        await deleteImmobileById(id);
+  
+        setAllImmobiles(newListImmobiles);
+      } else {
+        console.error("Imóvel não encontrado para exclusão.");
+      }
+    } catch (error) {
+      console.error("Erro ao excluir imóvel:", error);
+    }
+  }
+
   return (
     <>
       <div className="flex p-3">
-        <Link
-          href={'/immobiles'}
-          className="flex items-center gap-1 border-b-2 border-medium_secondary mt-2"
-        >
-          <ArrowLeft size={20} className="text-dark_blue" />
-          <p className="text-dark_blue">Voltar</p>
-        </Link>
+        <PageBack/>
       </div>
       <div className="w-full flex flex-col items-center pt-9 pb-6">
         <Search
@@ -101,12 +114,10 @@ export default function Releases() {
             return (
               <div
                 key={immobile.id}
-                className="w-[300px] flex flex-col justify-between items-center gap-2 border-2 bg-white rounded-md cursor-pointer"
-                onClick={() =>
-                  router.push(`/immobiles/detailing/${immobile.id}`)
-                }
-              >
-                <div className="w-full h-44 bg-zinc-100 relative object-contain">
+                className="w-[300px] flex flex-col justify-between items-center gap-2 border-2 bg-white rounded-md">
+                <div className="w-full h-44 bg-zinc-100 relative object-contain cursor-pointer" 
+                onClick={() => router.push(`/immobiles/detailing/${immobile.id}`)
+                }>
                   {immobile.ImageImovel.length > 0 ? (
                     <Image src={srcImage} alt="Imagem do Imóvel" fill={true} />
                   ) : (
@@ -132,6 +143,9 @@ export default function Releases() {
                   </div>
                 </div>
                 <div className="w-full flex flex-col items-center gap-1 pt-2 pb-2 bg-zinc-900 border-2">
+                  <button type='submit' className='w-full flex justify-end mr-3'onClick={()=> handleDelete(immobile.id)}>
+                    <Trash size={25} className='text-white cursor-pointer' />
+                  </button>
                   <p className="font-normal text-sm text-white">A partir de:</p>
                   <span className="font-body text-white">
                     R${immobile.preco}

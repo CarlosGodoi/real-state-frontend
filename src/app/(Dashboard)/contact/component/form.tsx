@@ -28,14 +28,14 @@ export const FormContact: React.FC = () => {
           resolve()
         }, 2000)
       })
-      reset()
       toast('corretor criado com sucesso!', {
         hideProgressBar: true,
-        autoClose: 2000,
+        autoClose: 3000,
         type: 'success',
         position: 'top-right',
         theme: 'colored',
       });
+      reset()
       router.push('/immobiles');
       
     } catch (error) {
@@ -54,6 +54,7 @@ export const FormContact: React.FC = () => {
   return (
     <Container>
       <div className="w-full flex flex-col items-center mt-14 mb-10 iphone_SE:mt-5">
+        
         <h2 className="font-serif text-3xl text-medium_blue iphone_SE:w-full text-center mt-8">
           Como podemos lhe ajudar?
         </h2>

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { TUser, useAuthContext } from '@/context/authContext';
-import { UserCircle } from '@phosphor-icons/react';
-import { useEffect, useState } from 'react';
-import avatar from '../../../../../public/assets/avatar.jpg';
-import Image from 'next/image';
+import { TUser, useAuthContext } from "@/context/authContext";
+import { useEffect, useState } from "react";
+import avatar from "../../../../../public/assets/avatar.jpg";
+import Image from "next/image";
+import { PageBack } from "@/components/pageBack";
 
 interface IParams {
   params: {
@@ -22,8 +22,11 @@ export default function Page({ params }: IParams) {
   }, [params.id, user, user.id]);
 
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center bg-zinc-100">
-      <section className="w-3/4 flex flex-col justify-center items-center gap-3 p-10 iphone_SE:w-full iphone_XR:w-full">
+    <div className="w-full flex flex-col items-center bg-zinc-100">
+      <div className="w-full mt-3">
+        <PageBack />
+      </div>
+      <section className="w-3/4 flex flex-col justify-center items-center gap-3 pt-10 pb-14 mt-8 iphone_SE:w-full iphone_XR:w-full">
         {/* <UserCircle size={100} className="text-blue-900" /> */}
         <Image
           src={avatar}
