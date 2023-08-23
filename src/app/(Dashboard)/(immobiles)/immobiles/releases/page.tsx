@@ -4,6 +4,7 @@ import Loanding from "@/components/loading";
 import { PageBack } from "@/components/pageBack";
 import { Search } from "@/components/search";
 import { useRequest } from "@/context/apiRequestContext";
+import { useAuthContext } from "@/context/authContext";
 import useDebounce from "@/hooks/useDebounce";
 import { deleteImmobileById } from "@/services/immobiles/delete";
 import { getAllImmobiles } from "@/services/immobiles/getAll";
@@ -18,6 +19,8 @@ export default function Releases() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const [search, setSearch] = useState("");
+
+  const isAuthenticated = useAuthContext();
 
   const router = useRouter();
 
@@ -73,20 +76,27 @@ export default function Releases() {
   const handleDelete = async (id: string) => {
     const idSelected = allImmobiles.findIndex((item) => item.id === id);
 
-    try {
-      if (idSelected !== -1) {
-        const newListImmobiles = allImmobiles.filter(
-          (immobile) => immobile.id !== id
-        );
+    const userRole = isAuthenticated.user.perfil.toString();
+    console.log("ROLE=>", userRole);
 
-        await deleteImmobileById(id);
+    if (userRole === "CORRETOR") {
+      try {
+        if (idSelected !== -1) {
+          const newListImmobiles = allImmobiles.filter(
+            (immobile) => immobile.id !== id
+          );
 
-        setAllImmobiles(newListImmobiles);
-      } else {
-        console.error("Imóvel não encontrado para exclusão.");
+          await deleteImmobileById(id);
+
+          setAllImmobiles(newListImmobiles);
+        } else {
+          console.error("Imóvel não encontrado para exclusão.");
+        }
+      } catch (error) {
+        console.error("Erro ao excluir imóvel:", error);
       }
-    } catch (error) {
-      console.error("Erro ao excluir imóvel:", error);
+    } else {
+      throw new Error("unauthorized");
     }
   };
 
@@ -150,7 +160,10 @@ export default function Releases() {
                   <button
                     type="submit"
                     className="w-full flex justify-end mr-3"
-                    onClick={() => handleDelete(immobile.id)}>
+                    onClick={() => {
+                      handleDelete(immobile.id);
+                      console.log("ID CARD=>", immobile.id);
+                    }}>
                     <Trash size={25} className="text-white cursor-pointer" />
                   </button>
                   <p className="font-normal text-sm text-white">A partir de:</p>

@@ -33,49 +33,23 @@ export default function FormRegisterImmobile() {
     defaultValues,
   });
 
-  const UploadImage = async (e: any) => {
-    const files = e.target.files;
-    const uploadedImages: string[] = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const base64 = await convertBase64(file);
-      uploadedImages.push(base64 as string);
-    }
-
-    setImagesPreview(uploadedImages);
-  };
-
-  const convertBase64 = (file: File) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
+  const UploadImage = async (files: File[]) => {
+    setImages(files);
   };
 
   const role = "CORRETOR";
 
   const onSubmitCreateImmobile = async (data: FormData) => {
     setLoading(true);
-    console.log("DATA =>", data);
 
     if (role && user.perfil) {
-      registerImmobile(data)
+      registerImmobile({ ...data, images })
         .then((res) => {
           // upload(res?.data.);
           if (res) router.push("/immobiles");
         })
         .catch(() => console.error("Unauthorized"))
         .finally(() => setLoading(false));
-      reset();
     }
   };
 

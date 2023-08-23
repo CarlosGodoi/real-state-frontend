@@ -69,7 +69,6 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const data = await req.json();
   const token = req.cookies.get("token")?.value;
-  const { searchParams } = new URL(req.url);
 
   try {
     const response = await api.post(
@@ -93,46 +92,6 @@ export async function POST(req: NextRequest) {
       }
     );
 
-    result.cookies.set("usuario", JSON.stringify(response.data.usuario));
-    result.cookies.set("token", response.data.token);
-    // result.cookies.set("refresh",refresh)
-
-    return result;
-  } catch (error) {
-    if (isAxiosError(error)) {
-      console.log("response =>", error);
-      return NextResponse.json(
-        { error: error.response?.data.error },
-        { status: error.response?.status }
-      );
-    }
-  }
-
-  try {
-    const resourceId = searchParams.get("id");
-    const response = await api.post(
-      `/imovel/images/${resourceId}`,
-      { ...data },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    // const refresh = response.headers["set-cookie"]?.toString().split(";")[0].split("=")[1] as string
-
-    const result = NextResponse.json(
-      {
-        ...response.data,
-      },
-      {
-        status: 200,
-      }
-    );
-
-    result.cookies.set("usuario", JSON.stringify(response.data.usuario));
-    result.cookies.set("token", response.data.token);
     // result.cookies.set("refresh",refresh)
 
     return result;
@@ -153,7 +112,7 @@ export async function PUT(req: NextRequest) {
 
   try {
     const response = await api.put(
-      "/imovel/:id",
+      "/imovel/",
       {
         preco: data.preco,
         tipoContrato: data.tipoContrato,

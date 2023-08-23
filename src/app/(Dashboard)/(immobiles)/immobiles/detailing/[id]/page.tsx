@@ -6,8 +6,7 @@ import { getAllImmobiles } from "@/services/immobiles/getAll";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { FormEditImmobile } from "../component";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { resolver, FormData, defaultValues } from "../[id]/schema";
 import { StatusImovel, TipoContrato } from "@/utils/selectEnum";
 import Loanding from "@/components/loading";
@@ -60,13 +59,13 @@ export default function DetailingImmobiles({ params }: IParams) {
       setValue("tipoContrato", immobile?.tipoContrato);
 
       setValue("endereco.bairro", immobile?.endereco.bairro);
+      setValue("endereco.rua", immobile?.endereco.rua);
       setValue("endereco.numero", immobile?.endereco.numero);
       setValue("endereco.cep", immobile?.endereco.cep);
       setValue("endereco.cidade", immobile?.endereco.cidade);
     }
   }, [immobile, setValue]);
-  console.log(matchedImmobile);
-  console.log("find =>", immobile);
+  console.log("RUA=>", immobile?.endereco.rua);
 
   const totalImages = immobile?.ImageImovel?.length || 0;
 
@@ -80,25 +79,26 @@ export default function DetailingImmobiles({ params }: IParams) {
     );
   };
 
-  console.log(errors);
-
   const handleEdit = async ({ preco, tipoContrato, status }: FormData) => {
     setLoading(true);
     console.log("DATA=>", preco, tipoContrato, status);
+    router.push("/immobiles/releases");
 
-    try {
-      await editImmobile(params.id, { preco, tipoContrato, status });
-      router.push("/immobiles/releases");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    // try {
+    //   await editImmobile(params.id, { preco, tipoContrato, status });
+    //   router.push("/immobiles/releases");
+    // } catch (error) {
+    //   console.log(error);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
+
+  console.log("ERRORS", errors);
 
   return (
     <div className="w-full flex flex-col bg-zinc-50">
-      <PageBack href="/releases" />
+      <PageBack href="/immobiles/releases" />
       <div className="w-full flex flex-col items-center">
         <h2 className="font-normal text-center text-3xl text-medium_blue mt-6">
           Detalhamento do imóvel
@@ -134,7 +134,7 @@ export default function DetailingImmobiles({ params }: IParams) {
                 size={30}
               />
             </div>
-            <form className="w-full flex flex-col gap-3 iphone_SE:items-center iphone_XR:items-center laptop:w-[90%]">
+            <div className="w-full flex flex-col gap-3 iphone_SE:items-center iphone_XR:items-center laptop:w-[90%]">
               <div className="w-full flex gap-3 iphone_SE:flex-col items-center iphone_XR:flex-col">
                 <div className="w-full flex flex-col iphone_SE:w-[90%] iphone_XR:w-[90%]">
                   <label>Área</label>
@@ -158,15 +158,43 @@ export default function DetailingImmobiles({ params }: IParams) {
                 </div>
               </div>
               <div className="w-full flex gap-3 iphone_SE:flex-col items-center iphone_XR:flex-col">
-                <div className="w-full flex flex-col iphone_SE:w-[90%] iphone_XR:w-[90%]">
+                <Controller
+                  name="preco"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <div className="w-full flex flex-col iphone_SE:w-[90%] iphone_XR:w-[90%]">
+                        <label>Preço</label>
+                        <input
+                          className="rounded-lg"
+                          {...register("preco")}
+                          type="number"
+                          {...field}
+                          value={field.value ?? 0}
+                          onChange={(e) => {
+                            field.onChange(parseInt(e.target.value));
+                          }}
+                        />
+                      </div>
+                    );
+                  }}
+                />
+                {/* <div className="w-full flex flex-col iphone_SE:w-[90%] iphone_XR:w-[90%]">
                   <label>Preço</label>
                   <input
                     className="rounded-lg"
                     {...register("preco")}
                     name="preco"
                     type="number"
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setValue(
+                        "preco",
+                        value !== "" ? parseFloat(value) : null
+                      );
+                    }}
                   />
-                </div>
+                </div> */}
                 <div className="w-full flex flex-col iphone_SE:w-[90%] iphone_XR:w-[90%]">
                   <label htmlFor="tipoContrato">Contrato</label>
                   <select
@@ -208,6 +236,16 @@ export default function DetailingImmobiles({ params }: IParams) {
               </div>
               <div className="w-full flex gap-3 iphone_SE:flex-col items-center iphone_XR:flex-col">
                 <div className="w-full flex flex-col iphone_SE:w-[90%] iphone_XR:w-[90%]">
+                  <label htmlFor="rua">Rua</label>
+                  <input
+                    className="rounded-lg disabled:bg-zinc-200 text-zinc-500"
+                    {...register("endereco.rua")}
+                    disabled
+                    name="rua"
+                    type="text"
+                  />
+                </div>
+                <div className="w-full flex flex-col iphone_SE:w-[90%] iphone_XR:w-[90%]">
                   <label htmlFor="numero">Número</label>
                   <input
                     className="rounded-lg disabled:bg-zinc-200 text-zinc-500"
@@ -217,6 +255,8 @@ export default function DetailingImmobiles({ params }: IParams) {
                     type="number"
                   />
                 </div>
+              </div>
+              <div className="w-full flex gap-3 iphone_SE:flex-col items-center iphone_XR:flex-col">
                 <div className="w-full flex flex-col iphone_SE:w-[90%] iphone_XR:w-[90%]">
                   <label htmlFor="CEP">CEP</label>
                   <input
@@ -245,7 +285,7 @@ export default function DetailingImmobiles({ params }: IParams) {
                   Salvar
                 </button>
               </div>
-            </form>
+            </div>
           </form>
         )}
       </div>

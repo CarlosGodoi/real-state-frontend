@@ -1,10 +1,9 @@
-import {apiFront as api} from "../api"
-
+import { apiFront } from "../api";
 
 export const deleteImmobileById = async (id: string) => {
   try {
-    return api.delete(`/api/immobiles/releases/${id}`)
+    return apiFront.delete(`/api/immobiles/${id}`);
   } catch (error) {
-    Promise.reject(error)
+    Promise.reject(error);
   }
-}
+};

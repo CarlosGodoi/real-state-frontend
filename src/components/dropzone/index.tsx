@@ -34,6 +34,8 @@ export const DropzoneImage: React.FC<IProps> = ({
             })
           )
         );
+
+        onUploadImage(acceptedFiles);
       },
     });
 
