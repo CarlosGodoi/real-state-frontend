@@ -6,6 +6,7 @@ import { addHours } from "date-fns";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
+
   let token = req.cookies.get("token")?.value as string;
   let refreshToken = req.cookies.get("refresh")?.value as string;
 
@@ -17,7 +18,7 @@ export async function GET(req: NextRequest) {
   };
   const now = Date.now();
   const expiresIn = new Date(
-    addHours(new Date(decoded.exp * 1000), -3)
+    addHours(new Date(decoded?.exp * 1000), -3)
   ).getTime();
 
   if (expiresIn < now) {
@@ -56,6 +57,7 @@ export async function GET(req: NextRequest) {
 
     return result;
   } catch (error) {
+    console.log("ERROR", error);
     if (isAxiosError(error)) {
       console.log(error.response?.data);
       return NextResponse.json(
@@ -125,8 +127,6 @@ export async function PUT(req: NextRequest) {
       }
     );
 
-    // const refresh = response.headers["set-cookie"]?.toString().split(";")[0].split("=")[1] as string
-
     const result = NextResponse.json(
       {
         ...response.data,
@@ -135,10 +135,6 @@ export async function PUT(req: NextRequest) {
         status: 200,
       }
     );
-
-    result.cookies.set("usuario", JSON.stringify(response.data.usuario));
-    result.cookies.set("token", response.data.token);
-    // result.cookies.set("refresh",refresh)
 
     return result;
   } catch (error) {

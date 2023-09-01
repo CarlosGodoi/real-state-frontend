@@ -1,16 +1,17 @@
-'use client';
-import Image from 'next/image';
-import img_ap1 from '../../../../../public/assets/buildings-1.svg';
-import img_ap2 from '../../../../../public/assets/skyscrapers.svg';
-import img_ap3 from '../../../../../public/assets/buildings-2.svg';
-import { useEffect, useState } from 'react';
-import { IImmobiles } from '@/app/interfaces/GetImmobiles';
-import { getAllImmobiles } from '@/services/immobiles/getAll';
-import { Carousel } from 'flowbite-react';
-import { AnimatedTitle } from './component/animatedTitle';
-import { AnimatedText } from './component/animatedText';
-import { useImmobilesContext } from '@/context/ImmobilesContext';
-import { useRouter } from 'next/navigation';
+"use client";
+import Image from "next/image";
+import img_ap1 from "../../../../../public/assets/buildings-1.svg";
+import img_ap2 from "../../../../../public/assets/skyscrapers.svg";
+import img_ap3 from "../../../../../public/assets/buildings-2.svg";
+import camera from "../../../../../public/assets/camera.svg";
+import { useEffect, useState } from "react";
+import { IImmobiles } from "@/app/interfaces/GetImmobiles";
+import { getAllImmobiles } from "@/services/immobiles/getAll";
+import { Carousel } from "flowbite-react";
+import { useImmobilesContext } from "@/context/ImmobilesContext";
+import { useRouter } from "next/navigation";
+import { AnimatedTitle } from "./component/animatedTitle";
+import { AnimatedText } from "./component/animatedText";
 
 interface ICarouselItem {
   id: string;
@@ -34,15 +35,22 @@ const CarouselItem = ({ id, srcImage }: ICarouselItem) => {
 export default function Immobiles() {
   const [immobiles, setImmobiles] = useState<IImmobiles[]>([]);
   const { handleTab, tab } = useImmobilesContext();
+
   const router = useRouter();
-  console.log(immobiles);
-  
 
   useEffect(() => {
-    getAllImmobiles().then((res: { imoveis: IImmobiles[]; total: number }) => {
-      setImmobiles(res.imoveis);
-    });
+    (async () => {
+      await getAllImmobiles().then(
+        (res: { imoveis: IImmobiles[]; total: number }) => {
+          if (res) {
+            setImmobiles(res?.imoveis);
+          }
+        }
+      );
+    })();
   }, []);
+
+  console.log(immobiles);
 
   return (
     <>
@@ -58,14 +66,13 @@ export default function Immobiles() {
                 type="button"
                 className={`${
                   active
-                    ? 'bg-zinc-900 text-white rounded-e-xl'
-                    : 'bg-white text-zinc-900'
+                    ? "bg-zinc-900 text-white rounded-e-xl"
+                    : "bg-white text-zinc-900"
                 } w-[50%] h-11 rounded-s-xl rounded-e-xl iphone_XR:w-[90%] iphone_SE:w-full`}
                 onClick={() => {
                   handleTab(label, value);
                   router.push(`/immobiles/${value}`);
-                }}
-              >
+                }}>
                 {label}
               </button>
             );
@@ -75,8 +82,7 @@ export default function Immobiles() {
           <button
             type="button"
             className="w-[50%] h-8 rounded-full font-medium text-zinc-900 bg-dark_secondary hover:bg-medium_secondary desktop:w-[70%] laptop:w-[80%] iphone_SE:w-[70%] iphone_XR:w-[60%]"
-            onClick={() => router.push('/immobiles/releases')}
-          >
+            onClick={() => router.push("/immobiles/releases")}>
             Confira nossos lançamentos
           </button>
         </div>
@@ -146,7 +152,7 @@ export default function Immobiles() {
           </h2>
         </div>
         <Carousel className="w-[50%] iphone_XR:w-[90%]">
-          {immobiles.length > 0 ? (
+          {immobiles?.length > 0 ? (
             immobiles
               .filter((el) => el.ImageImovel.length > 0)
               .map(({ ImageImovel, id }) => {

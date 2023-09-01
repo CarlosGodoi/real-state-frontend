@@ -11,7 +11,7 @@ export default function Contact() {
           Central de contato RealState
         </h2>
       </div>
-      <div className="ml-4">
+      <div className="w-full flex p-3">
         <PageBack href="/immobiles" />
       </div>
       <FormContact />

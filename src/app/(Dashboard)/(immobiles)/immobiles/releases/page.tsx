@@ -1,17 +1,20 @@
 "use client";
 import { IImmobiles } from "@/app/interfaces/GetImmobiles";
+import Container from "@/components/container";
 import Loanding from "@/components/loading";
 import { PageBack } from "@/components/pageBack";
 import { Search } from "@/components/search";
 import { useRequest } from "@/context/apiRequestContext";
 import { useAuthContext } from "@/context/authContext";
-import useDebounce from "@/hooks/useDebounce";
 import { deleteImmobileById } from "@/services/immobiles/delete";
 import { getAllImmobiles } from "@/services/immobiles/getAll";
 import { Bed, Ruler, Trash } from "@phosphor-icons/react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import useDebounce from "@/hooks/useDebounce";
+import Image from "next/image";
+import camera from "../../../../../../public/assets/camera.svg";
 
 export default function Releases() {
   const { apiRequest } = useRequest();
@@ -86,14 +89,28 @@ export default function Releases() {
             (immobile) => immobile.id !== id
           );
 
-          await deleteImmobileById(id);
+          await deleteImmobileById(id).then(() =>
+            toast("Imóvel deletado!", {
+              hideProgressBar: true,
+              autoClose: 2000,
+              type: "success",
+              position: "top-right",
+              theme: "colored",
+            })
+          );
 
           setAllImmobiles(newListImmobiles);
         } else {
           console.error("Imóvel não encontrado para exclusão.");
         }
       } catch (error) {
-        console.error("Erro ao excluir imóvel:", error);
+        toast("Erro ao excluir imóvel", {
+          hideProgressBar: true,
+          autoClose: 2000,
+          type: "error",
+          position: "top-right",
+          theme: "colored",
+        });
       }
     } else {
       throw new Error("unauthorized");
@@ -101,8 +118,8 @@ export default function Releases() {
   };
 
   return (
-    <>
-      <div className="flex p-3">
+    <Container>
+      <div className="w-full flex p-3">
         <PageBack href="/immobiles" />
       </div>
       <div className="w-full flex flex-col items-center pt-9 pb-6">
@@ -135,7 +152,14 @@ export default function Releases() {
                   {immobile.ImageImovel.length > 0 ? (
                     <Image src={srcImage} alt="Imagem do Imóvel" fill={true} />
                   ) : (
-                    <p>Não há imagens</p>
+                    <div className="w-full h-44 flex justify-center items-center">
+                      <Image
+                        src={camera}
+                        alt="Imagem de uma câmera fotografica"
+                        width={70}
+                        height={70}
+                      />
+                    </div>
                   )}
                 </div>
                 <div className="flex flex-col justify-center items-center mt-2 gap-3">
@@ -143,7 +167,13 @@ export default function Releases() {
                   <p className="font-thin text-sm text-medium_secondary">
                     {immobile.endereco.bairro} - {immobile.endereco.cidade}
                   </p>
-                  <div className="flex justify-around items-center gap-5 mt-4">
+                  <div className="flex justify-between items-center gap-5 mt-4">
+                    <div className="flex flex-col items-center gap-2">
+                      <p>Status</p>
+                      <span className="font-body text-xs">
+                        {immobile.tipoContrato}
+                      </span>
+                    </div>
                     <div className="flex flex-col items-center gap-2">
                       <Ruler size={25} />
                       <span className="font-body">{immobile.area}m2</span>
@@ -157,15 +187,13 @@ export default function Releases() {
                   </div>
                 </div>
                 <div className="w-full flex flex-col items-center gap-1 pt-2 pb-2 bg-zinc-900 border-2">
-                  <button
-                    type="submit"
-                    className="w-full flex justify-end mr-3"
-                    onClick={() => {
-                      handleDelete(immobile.id);
-                      console.log("ID CARD=>", immobile.id);
-                    }}>
-                    <Trash size={25} className="text-white cursor-pointer" />
-                  </button>
+                  <div className="w-full flex justify-end pr-2">
+                    <button
+                      type="submit"
+                      onClick={() => handleDelete(immobile.id)}>
+                      <Trash size={25} className="text-white cursor-pointer" />
+                    </button>
+                  </div>
                   <p className="font-normal text-sm text-white">A partir de:</p>
                   <span className="font-body text-white">
                     R${immobile.preco}
@@ -178,6 +206,6 @@ export default function Releases() {
           <p>Não há imóveis</p>
         )}
       </div>
-    </>
+    </Container>
   );
 }

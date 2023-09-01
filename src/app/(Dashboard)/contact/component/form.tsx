@@ -42,7 +42,7 @@ export const FormContact: React.FC = () => {
     } catch (error) {
       toast("Ocorreu um erro ao enviar o formulário", {
         hideProgressBar: true,
-        autoClose: 2000,
+        autoClose: 3000,
         type: "error",
         position: "top-right",
         theme: "colored",
@@ -54,7 +54,7 @@ export const FormContact: React.FC = () => {
 
   return (
     <Container>
-      <div className="w-full flex flex-col items-center mt-14 mb-10 iphone_SE:mt-5">
+      <div className="w-full flex flex-col items-center pt-10 pb-16  iphone_SE:mt-5">
         <h2 className="font-serif text-3xl text-medium_blue iphone_SE:w-full text-center mt-8">
           Como podemos lhe ajudar?
         </h2>

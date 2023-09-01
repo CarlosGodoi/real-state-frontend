@@ -1,4 +1,5 @@
 // import { apiFront as api } from "../api";
+import { getCookie } from "cookies-next";
 import api from "../api";
 
 interface IUploadImage {
@@ -15,6 +16,7 @@ export const upload = async (imovelId: string, data: File[]) => {
   try {
     return api.post<IUploadImage>(`/imovel/images/${imovelId}`, formData, {
       headers: {
+        Authorization: `Bearer ${getCookie("token")?.toString()}`,
         "Content-Type": "multipart/form-data",
       },
     });

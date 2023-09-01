@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { resolver, FormData, defaultValues } from "../schema";
 import Loanding from "@/components/loading";
 import { registerBroker } from "@/services/user/registerBroker";
@@ -17,12 +17,14 @@ import { PageBack } from "@/components/pageBack";
 
 export default function RegisterBroker() {
   const [loading, setLoading] = useState<boolean>(false);
+  const [isFieldFilled, setIsFieldFilled] = useState(false);
   const isAuthenticated = useAuthContext();
   const router = useRouter();
   const {
     handleSubmit,
     register,
     formState: { errors, isDirty },
+    control,
   } = useForm<FormData>({
     resolver,
     defaultValues,
@@ -57,55 +59,182 @@ export default function RegisterBroker() {
       </div>
       <form
         onSubmit={handleSubmit(onSubmitCreateAccount)}
-        className="w-3/5 h-screen flex flex-col justify-center items-center gap-4 iphone_XR:w-full ipad:w-full">
+        className="w-1/2 h-screen flex flex-col justify-center items-center gap-4 iphone_XR:w-full ipad:w-full">
         <h2 className="font-semibold text-4xl text-medium_blue mb-6">
           Cadastre seu corretor
         </h2>
-        <input
-          className="w-4/5 h-12 border-2 border-zinc-200 rounded-lg focus:border-blue-400 focus:outline-none"
-          type="text"
-          placeholder="Nome"
-          {...register("nome")}
-        />
-        {errors.nome?.message && (
-          <p className="text-xs text-red-500">{errors.nome.message}</p>
-        )}
-        <input
-          className="w-4/5 h-12 border-2 border-zinc-200 rounded-lg focus:border-blue-400 focus:outline-none"
-          type="email"
-          placeholder="Email"
-          {...register("email")}
-        />
-        {errors.email?.message && (
-          <p className="text-xs text-red-500">{errors.email.message}</p>
-        )}
-        <input
-          className="w-4/5 h-12 border-2 border-zinc-200 rounded-lg focus:border-blue-400 focus:outline-none"
-          type="tel"
-          placeholder="Telefone"
-          {...register("telefone")}
-        />
-        {errors.telefone?.message && (
-          <p className="text-xs text-red-500">{errors.telefone.message}</p>
-        )}
-        <input
-          className="w-4/5 h-12 border-2 border-zinc-200 rounded-lg focus:border-blue-400 focus:outline-none"
-          type="text"
-          placeholder="Perfil"
-          {...register("perfil")}
-        />
-        {errors.perfil?.message && (
-          <p className="text-xs text-red-500">{errors.perfil.message}</p>
-        )}
-        <input
-          className="w-4/5 h-12 border-2 border-zinc-200 rounded-lg focus:border-blue-400 focus:outline-none"
-          type="password"
-          placeholder="Senha"
-          {...register("senha")}
-        />
-        {errors.senha?.message && (
-          <p className="text-xs text-red-500">{errors.senha.message}</p>
-        )}
+        <div
+          className="w-4/5 flex flex-col items-center relative mb-3 laptop:w-[90%] ipad:w-[90%] iphone_XR:w-full iphone_SE:mb-0"
+          data-te-input-wrapper-init>
+          <Controller
+            name="nome"
+            control={control}
+            render={({ field }) => {
+              return (
+                <input
+                  className="peer block min-h-[auto] w-full h-12 rounded-lg border-2 border-zinc-300  px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary focus:border-blue-300 focus:outline-none"
+                  type="text"
+                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                    setIsFieldFilled(!!e.target.value);
+                  }}
+                />
+              );
+            }}
+          />
+          <label
+            htmlFor="nome"
+            className={`pointer-events-none absolute bg-transparent left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] text-neutral-500 transition-all duration-200 ease-out ${
+              isFieldFilled ? "-translate-y-[0.9rem] scale-[0.8]" : ""
+            } peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8]  peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-focus:bg-zinc-100
+  peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary`}>
+            Nome
+          </label>
+          {errors.nome?.message && (
+            <p className="text-xs text-red-500 mt-2">{errors.nome.message}</p>
+          )}
+        </div>
+
+        <div
+          className="w-4/5 flex flex-col items-center relative mb-3 laptop:w-[90%] ipad:w-[90%] iphone_XR:w-full iphone_SE:mb-0"
+          data-te-input-wrapper-init>
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => {
+              return (
+                <input
+                  className="peer block min-h-[auto] w-full h-12 rounded-lg border-2 border-zinc-300  px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary focus:border-blue-300 focus:outline-none"
+                  type="email"
+                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                    setIsFieldFilled(!!e.target.value);
+                  }}
+                />
+              );
+            }}
+          />
+          <label
+            htmlFor="email"
+            className={`pointer-events-none absolute bg-transparent left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] text-neutral-500 transition-all duration-200 ease-out ${
+              isFieldFilled ? "-translate-y-[0.9rem] scale-[0.8]" : ""
+            } peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8]  peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-focus:bg-zinc-100
+  peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary`}>
+            E-mail
+          </label>
+          {errors.email?.message && (
+            <p className="text-xs text-red-500 mt-2">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div
+          className="w-4/5 flex flex-col items-center relative mb-3 laptop:w-[90%] ipad:w-[90%] iphone_XR:w-full iphone_SE:mb-0"
+          data-te-input-wrapper-init>
+          <Controller
+            name="telefone"
+            control={control}
+            render={({ field }) => {
+              return (
+                <input
+                  className="peer block min-h-[auto] w-full h-12 rounded-lg border-2 border-zinc-300  px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary focus:border-blue-300 focus:outline-none"
+                  type="tel"
+                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                    setIsFieldFilled(!!e.target.value);
+                  }}
+                />
+              );
+            }}
+          />
+          <label
+            htmlFor="telefone"
+            className={`pointer-events-none absolute bg-transparent left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] text-neutral-500 transition-all duration-200 ease-out ${
+              isFieldFilled ? "-translate-y-[0.9rem] scale-[0.8]" : ""
+            } peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8]  peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-focus:bg-zinc-100
+  peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary`}>
+            Telefone
+          </label>
+          {errors.telefone?.message && (
+            <p className="text-xs text-red-500 mt-2">
+              {errors.telefone.message}
+            </p>
+          )}
+        </div>
+
+        <div
+          className="w-4/5 flex flex-col items-center relative mb-3 laptop:w-[90%] ipad:w-[90%] iphone_XR:w-full iphone_SE:mb-0"
+          data-te-input-wrapper-init>
+          <Controller
+            name="perfil"
+            control={control}
+            render={({ field }) => {
+              return (
+                <input
+                  className="peer block min-h-[auto] w-full h-12 rounded-lg border-2 border-zinc-300  px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary focus:border-blue-300 focus:outline-none"
+                  type="text"
+                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                    setIsFieldFilled(!!e.target.value);
+                  }}
+                />
+              );
+            }}
+          />
+          <label
+            htmlFor="perfil"
+            className={`pointer-events-none absolute bg-transparent left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] text-neutral-500 transition-all duration-200 ease-out ${
+              isFieldFilled ? "-translate-y-[0.9rem] scale-[0.8]" : ""
+            } peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8]  peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-focus:bg-zinc-100
+  peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary`}>
+            Perfil
+          </label>
+          {errors.perfil?.message && (
+            <p className="text-xs text-red-500 mt-2">{errors.perfil.message}</p>
+          )}
+        </div>
+
+        <div
+          className="w-4/5 flex flex-col items-center relative mb-3 laptop:w-[90%] ipad:w-[90%] iphone_XR:w-full iphone_SE:mb-0"
+          data-te-input-wrapper-init>
+          <Controller
+            name="senha"
+            control={control}
+            render={({ field }) => {
+              return (
+                <input
+                  className="peer block min-h-[auto] w-full h-12 rounded-lg border-2 border-zinc-300  px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary focus:border-blue-300 focus:outline-none"
+                  type="password"
+                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                    setIsFieldFilled(!!e.target.value);
+                  }}
+                />
+              );
+            }}
+          />
+          <label
+            htmlFor="senha"
+            className={`pointer-events-none absolute bg-transparent left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] text-neutral-500 transition-all duration-200 ease-out ${
+              isFieldFilled ? "-translate-y-[0.9rem] scale-[0.8]" : ""
+            } peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8]  peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-focus:bg-zinc-100
+  peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary`}>
+            Senha
+          </label>
+          {errors.senha?.message && (
+            <p className="text-xs text-red-500 mt-2">{errors.senha.message}</p>
+          )}
+        </div>
+
         <button
           type="submit"
           className="flex justify-center items-center w-3/5 h-12 border-2 rounded-lg bg-light_blue text-white mt-5 focus:border-blue-700 focus:outline-none"

@@ -1,14 +1,14 @@
-'use client';
+"use client";
 import {
   ReactNode,
   createContext,
   useContext,
   useEffect,
   useState,
-} from 'react';
-import { useRouter } from 'next/navigation';
-import { getAllImmobiles } from '@/services/immobiles/getAll';
-import { IImmobiles } from '@/app/interfaces/GetImmobiles';
+} from "react";
+import { useRouter } from "next/navigation";
+import { getAllImmobiles } from "@/services/immobiles/getAll";
+import { IImmobiles } from "@/app/interfaces/GetImmobiles";
 
 interface IFilter {
   tipoContrato: string;
@@ -31,7 +31,7 @@ interface IImmobilesContext {
 }
 
 export const ImmobilesContext = createContext<IImmobilesContext>(
-  {} as IImmobilesContext,
+  {} as IImmobilesContext
 );
 
 interface IProps {
@@ -44,27 +44,31 @@ export const ImmobilesProvider: React.FC<IProps> = ({ children }) => {
 
   const [tab, setTab] = useState<ITab[]>([
     {
-      label: 'Aluguel',
+      label: "Aluguel",
       active: true,
-      value: 'ALUGUEL',
+      value: "ALUGUEL",
     },
     {
-      label: 'Venda',
+      label: "Venda",
       active: false,
-      value: 'VENDA',
+      value: "VENDA",
     },
   ]);
 
   const [filter, setFilter] = useState<IFilter>({
-    tipoContrato: '',
-    search: '',
+    tipoContrato: "",
+    search: "",
   });
 
   useEffect(() => {
-    getAllImmobiles().then((res) => setImmobiles(res.imoveis));
+    getAllImmobiles().then((res) => {
+      if (res) {
+        setImmobiles(res?.imoveis);
+      }
+    });
   }, []);
 
-  const handleTab = (label: string, value: string = 'VENDA' || 'ALUGUEL') => {
+  const handleTab = (label: string, value: string = "VENDA" || "ALUGUEL") => {
     setFilter({ ...filter, tipoContrato: value });
     setTab((prev) => {
       return prev.map((el) => {
@@ -90,8 +94,7 @@ export const ImmobilesProvider: React.FC<IProps> = ({ children }) => {
         handleTab,
         handleSearch,
         searchImmobiles,
-      }}
-    >
+      }}>
       {children}
     </ImmobilesContext.Provider>
   );

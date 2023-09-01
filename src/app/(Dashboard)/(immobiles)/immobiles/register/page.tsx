@@ -1,5 +1,5 @@
-import React from 'react';
-import FormRegisterImmobile from './component';
+import React from "react";
+import FormRegisterImmobile from "./component";
 
 export default function RegisterImmobile() {
   return (

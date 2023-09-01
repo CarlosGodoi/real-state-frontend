@@ -56,7 +56,7 @@ export const DropzoneImage: React.FC<IProps> = ({
   });
 
   return (
-    <div className="w-[60%] flex flex-col border-2 border-dark_blue rounded-lg iphone_XR:w-full laptop:w-[70%] desktop:w-[80%] notebook_13p:w-[70%]">
+    <div className="w-[90%] flex flex-col border-2 border-dark_blue rounded-lg iphone_XR:w-[90%] laptop:w-[70%] desktop:w-[80%] notebook_13p:w-[70%]">
       <div className="w-full p-3 flex justify-center items-center bg-dark_blue text-white text-xl">
         <h2>Upload de imagens</h2>
       </div>
@@ -76,11 +76,11 @@ export const DropzoneImage: React.FC<IProps> = ({
           <p className="text-dark_blue">Arraste seus arquivos</p>
         </div>
       </div>
-      <div className="w-full flex justify-between mt-3">
+      <div className="w-full flex justify-between mt-3 iphone_XR:text-sm iphone_SE:text-sm">
         <div className="w-full flex flex-col items-center">
           Arquivos aceitos {acceptedFilesItems}
         </div>
-        <div className="w-full flex flex-col items-center">
+        <div className="w-full flex flex-col items-center iphone_XR:text-sm iphone_SE:text-sm">
           Arquivos Rejeitados {fileRejectionsItems}
         </div>
       </div>

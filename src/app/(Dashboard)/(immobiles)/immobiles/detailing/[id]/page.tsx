@@ -45,7 +45,7 @@ export default function DetailingImmobiles({ params }: IParams) {
     setLoading(true);
     getAllImmobiles()
       .then((res: { imoveis: IImmobiles[]; total: number }) => {
-        setMatchedImmobile(res.imoveis);
+        setMatchedImmobile(res?.imoveis);
       })
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
@@ -57,6 +57,7 @@ export default function DetailingImmobiles({ params }: IParams) {
       setValue("quantidadeQuartos", immobile?.quantidadeQuartos);
       setValue("preco", immobile?.preco);
       setValue("tipoContrato", immobile?.tipoContrato);
+      setValue("status", immobile?.status);
 
       setValue("endereco.bairro", immobile?.endereco.bairro);
       setValue("endereco.rua", immobile?.endereco.rua);
@@ -65,7 +66,6 @@ export default function DetailingImmobiles({ params }: IParams) {
       setValue("endereco.cidade", immobile?.endereco.cidade);
     }
   }, [immobile, setValue]);
-  console.log("RUA=>", immobile?.endereco.rua);
 
   const totalImages = immobile?.ImageImovel?.length || 0;
 
@@ -82,25 +82,25 @@ export default function DetailingImmobiles({ params }: IParams) {
   const handleEdit = async ({ preco, tipoContrato, status }: FormData) => {
     setLoading(true);
     console.log("DATA=>", preco, tipoContrato, status);
-    router.push("/immobiles/releases");
 
-    // try {
-    //   await editImmobile(params.id, { preco, tipoContrato, status });
-    //   router.push("/immobiles/releases");
-    // } catch (error) {
-    //   console.log(error);
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      await editImmobile(params.id, { preco, tipoContrato, status });
+      router.push("/immobiles/releases");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
-
-  console.log("ERRORS", errors);
 
   return (
     <div className="w-full flex flex-col bg-zinc-50">
-      <PageBack href="/immobiles/releases" />
-      <div className="w-full flex flex-col items-center">
-        <h2 className="font-normal text-center text-3xl text-medium_blue mt-6">
+      <div className="w-full flex p-3">
+        <PageBack href="/immobiles/releases" />
+      </div>
+
+      <div className="w-full flex flex-col items-center pt-10 pb-20">
+        <h2 className="font-normal text-center text-4xl text-medium_blue mt-6">
           Detalhamento do imóvel
         </h2>
         {loading ? (
@@ -179,22 +179,6 @@ export default function DetailingImmobiles({ params }: IParams) {
                     );
                   }}
                 />
-                {/* <div className="w-full flex flex-col iphone_SE:w-[90%] iphone_XR:w-[90%]">
-                  <label>Preço</label>
-                  <input
-                    className="rounded-lg"
-                    {...register("preco")}
-                    name="preco"
-                    type="number"
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setValue(
-                        "preco",
-                        value !== "" ? parseFloat(value) : null
-                      );
-                    }}
-                  />
-                </div> */}
                 <div className="w-full flex flex-col iphone_SE:w-[90%] iphone_XR:w-[90%]">
                   <label htmlFor="tipoContrato">Contrato</label>
                   <select
@@ -281,7 +265,7 @@ export default function DetailingImmobiles({ params }: IParams) {
               <div className="flex justify-center mt-5 iphone_SE:w-full items-center">
                 <button
                   type="submit"
-                  className="w-80 bg-light_blue text-white h-10 rounded-lg iphone_SE:w-[90%]">
+                  className="w-80 h-10 bg-light_blue text-white mt-6 rounded-lg iphone_SE:w-[90%]">
                   Salvar
                 </button>
               </div>

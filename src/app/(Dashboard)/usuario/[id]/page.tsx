@@ -23,9 +23,7 @@ export default function Page({ params }: IParams) {
 
   return (
     <div className="w-full flex flex-col items-center bg-zinc-100">
-      <div className="w-full mt-3">
-        <PageBack />
-      </div>
+      <div className="w-full mt-3">{/* <PageBack /> */}</div>
       <section className="w-3/4 flex flex-col justify-center items-center gap-3 pt-10 pb-14 mt-8 iphone_SE:w-full iphone_XR:w-full">
         {/* <UserCircle size={100} className="text-blue-900" /> */}
         <Image

@@ -1,4 +1,4 @@
-import { apiFront as api } from "../api";
+import { apiFront } from "../api";
 
 interface IEditImmobile {
   preco: number | null;
@@ -8,7 +8,7 @@ interface IEditImmobile {
 
 export const editImmobile = async (imovelId: string, data: IEditImmobile) => {
   try {
-    return api.put<IEditImmobile>(`/api/immobiles/${imovelId}`, {
+    return apiFront.put<IEditImmobile>(`/api/immobiles/${imovelId}`, {
       preco: data.preco,
       tipoContrato: data.tipoContrato,
       status: data.status,

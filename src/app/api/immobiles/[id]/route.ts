@@ -27,8 +27,6 @@ export async function PUT(req: NextRequest, { params }: IParams) {
       }
     );
 
-    // const refresh = response.headers["set-cookie"]?.toString().split(";")[0].split("=")[1] as string
-
     const result = NextResponse.json(
       {
         ...response.data,
@@ -37,10 +35,6 @@ export async function PUT(req: NextRequest, { params }: IParams) {
         status: 200,
       }
     );
-
-    result.cookies.set("usuario", JSON.stringify(response.data.usuario));
-    result.cookies.set("token", response.data.token);
-    // result.cookies.set("refresh",refresh)
 
     return result;
   } catch (error) {
@@ -56,7 +50,6 @@ export async function PUT(req: NextRequest, { params }: IParams) {
 
 export async function DELETE(req: NextRequest, { params }: IParams) {
   const token = req.cookies.get("token")?.value;
-  console.log(token);
 
   try {
     const response = await api.delete(`/imovel/${params.id}`, {
@@ -65,15 +58,9 @@ export async function DELETE(req: NextRequest, { params }: IParams) {
       },
     });
 
-    // const refresh = response.headers["set-cookie"]?.toString().split(";")[0].split("=")[1] as string
-
     const result = NextResponse.json({
       status: 200,
     });
-
-    result.cookies.set("usuario", JSON.stringify(response.data.usuario));
-    result.cookies.set("token", response.data.token);
-    // result.cookies.set("refresh",refresh)
 
     return result;
   } catch (error) {
