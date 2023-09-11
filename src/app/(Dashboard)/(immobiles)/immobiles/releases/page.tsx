@@ -24,6 +24,7 @@ export default function Releases() {
   const [search, setSearch] = useState("");
 
   const isAuthenticated = useAuthContext();
+  const userPerfil = isAuthenticated.user?.perfil?.toString();
 
   const router = useRouter();
 
@@ -80,7 +81,6 @@ export default function Releases() {
     const idSelected = allImmobiles.findIndex((item) => item.id === id);
 
     const userRole = isAuthenticated.user.perfil.toString();
-    console.log("ROLE=>", userRole);
 
     if (userRole === "CORRETOR") {
       try {
@@ -145,10 +145,14 @@ export default function Releases() {
                 key={immobile.id}
                 className="w-[300px] flex flex-col justify-between items-center gap-2 border-2 bg-white rounded-md">
                 <div
-                  className="w-full h-44 bg-zinc-100 relative object-contain cursor-pointer"
-                  onClick={() =>
-                    router.push(`/immobiles/detailing/${immobile.id}`)
-                  }>
+                  className={`w-full h-44 bg-zinc-100 relative object-contain ${
+                    userPerfil === "COMPRADOR" ? "" : " cursor-pointer"
+                  }`}
+                  onClick={() => {
+                    userPerfil === "COMPRADOR"
+                      ? null
+                      : router.push(`/immobiles/detailing/${immobile.id}`);
+                  }}>
                   {immobile.ImageImovel.length > 0 ? (
                     <Image src={srcImage} alt="Imagem do Imóvel" fill={true} />
                   ) : (
@@ -187,13 +191,19 @@ export default function Releases() {
                   </div>
                 </div>
                 <div className="w-full flex flex-col items-center gap-1 pt-2 pb-2 bg-zinc-900 border-2">
-                  <div className="w-full flex justify-end pr-2">
-                    <button
-                      type="submit"
-                      onClick={() => handleDelete(immobile.id)}>
-                      <Trash size={25} className="text-white cursor-pointer" />
-                    </button>
-                  </div>
+                  {userPerfil === "COMPRADOR" ? null : (
+                    <div className="w-full flex justify-end pr-2">
+                      <button
+                        type="submit"
+                        onClick={() => handleDelete(immobile.id)}>
+                        <Trash
+                          size={25}
+                          className="text-white cursor-pointer"
+                        />
+                      </button>
+                    </div>
+                  )}
+
                   <p className="font-normal text-sm text-white">A partir de:</p>
                   <span className="font-body text-white">
                     R${immobile.preco}

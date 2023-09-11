@@ -15,12 +15,14 @@ module.exports = {
         primary: "#DAD10B",
         secondary: "#79A072",
 
-        dark_secondary: "#959366",
+        medium_gray: "#A7A7A7",
         medium_secondary: "#B3B17B",
         medium_blue: "#23243F",
 
-        light_blue: "#00B7C4",
+        light_blue: "#345499",
 
+        medium_green: "#9DCE8C",
+        dark_secondary: "#7FB06F",
         dark_blue: "#31364E",
       },
       backgroundImage: {

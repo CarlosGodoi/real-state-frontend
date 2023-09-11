@@ -1,6 +1,6 @@
 "use client";
 
-import { IImmobiles } from "@/app/interfaces/GetImmobiles";
+import { IImmobile, IImmobiles } from "@/app/interfaces/GetImmobiles";
 import { PageBack } from "@/components/pageBack";
 import { getAllImmobiles } from "@/services/immobiles/getAll";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
@@ -13,6 +13,8 @@ import Loanding from "@/components/loading";
 import { useAuthContext } from "@/context/authContext";
 import { editImmobile } from "@/services/immobiles/edit";
 import { useRouter } from "next/navigation";
+import { getImmobileById } from "@/services/immobiles/getById";
+import camera from "../../../../../../../public/assets/camera.svg";
 
 interface IParams {
   params: {
@@ -28,6 +30,7 @@ export default function DetailingImmobiles({ params }: IParams) {
   const immobile = matchedImmobile.find((item) => item.id === params.id);
   const isAuthenticated = useAuthContext();
   const router = useRouter();
+  const [imovel, setImovel] = useState<IImmobile>();
 
   const {
     handleSubmit,
@@ -42,42 +45,55 @@ export default function DetailingImmobiles({ params }: IParams) {
   });
 
   useEffect(() => {
-    setLoading(true);
-    getAllImmobiles()
-      .then((res: { imoveis: IImmobiles[]; total: number }) => {
-        setMatchedImmobile(res?.imoveis);
-      })
-      .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
-  }, []);
+    getImmobileById(params.id).then((resp) => {
+      setImovel(resp?.data.imovel);
+      if (resp) {
+        console.log(resp.data.imovel);
 
-  useEffect(() => {
-    if (immobile) {
-      setValue("area", immobile?.area);
-      setValue("quantidadeQuartos", immobile?.quantidadeQuartos);
-      setValue("preco", immobile?.preco);
-      setValue("tipoContrato", immobile?.tipoContrato);
-      setValue("status", immobile?.status);
+        setValue("area", resp.data.imovel.area);
+        setValue("quantidadeQuartos", resp.data.imovel.quantidadeQuartos);
+        setValue("preco", resp?.data.imovel.preco);
+        setValue("tipoContrato", resp?.data.imovel.tipoContrato);
+        setValue("status", resp?.data.imovel.status);
 
-      setValue("endereco.bairro", immobile?.endereco.bairro);
-      setValue("endereco.rua", immobile?.endereco.rua);
-      setValue("endereco.numero", immobile?.endereco.numero);
-      setValue("endereco.cep", immobile?.endereco.cep);
-      setValue("endereco.cidade", immobile?.endereco.cidade);
-    }
-  }, [immobile, setValue]);
+        setValue("endereco.bairro", resp.data.imovel.endereco.bairro);
+        setValue("endereco.rua", resp?.data.imovel.endereco.rua);
+        setValue("endereco.numero", resp?.data.imovel.endereco.numero);
+        setValue("endereco.cep", resp?.data.imovel.endereco.cep);
+        setValue("endereco.cidade", resp?.data.imovel.endereco.cidade);
+      }
+    });
+  }, [params.id, setValue]);
 
-  const totalImages = immobile?.ImageImovel?.length || 0;
+  const srcImg =
+    imovel?.ImageImovel && imovel.ImageImovel[currentImageIndex]
+      ? `http://localhost:3334/${imovel.ImageImovel[currentImageIndex].path}`
+      : "";
 
-  const goToNextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % totalImages);
-  };
+  // const goToNextImage = () => {
+  //   if (imovel?.ImageImovel) {
+  //     let indexActual = imovel.ImageImovel.findIndex((el) => +el.id === id);
 
-  const goToPreviousImage = () => {
-    setCurrentImageIndex(
-      (prevIndex) => (prevIndex - 1 + totalImages) % totalImages
-    );
-  };
+  //     if (indexActual !== -1) {
+  //       let nextIndex = indexActual + 1;
+  //       if (nextIndex >= imovel.ImageImovel.length) {
+  //         nextIndex = 0; // Voltar para a primeira imagem se chegarmos ao final do array
+  //       }
+  //       // setCurrentImageIndex(imovel.ImageImovel[nextIndex]?.id);
+  //       // console.log(
+  //       //   "entrei aqui",
+  //       //   imovel.ImageImovel && imovel.ImageImovel[nextIndex]?.id
+  //       // );
+  //       console.log("nextIndex:", nextIndex);
+  //     }
+  //   }
+  // };
+
+  // const goToPreviousImage = () => {
+  //   setCurrentImageIndex(
+  //     (prevIndex) => (prevIndex - 1 + totalImages) % totalImages
+  //   );
+  // };
 
   const handleEdit = async ({ preco, tipoContrato, status }: FormData) => {
     setLoading(true);
@@ -110,26 +126,29 @@ export default function DetailingImmobiles({ params }: IParams) {
         ) : (
           <form
             onSubmit={handleSubmit(handleEdit)}
-            className="w-[60%] flex flex-col justify-between gap-3 pt-10 pb-10 laptop:flex-col iphone_XR:w-[90%] items-center">
+            className="w-[50%] flex flex-col justify-between gap-3 pt-10 pb-10 laptop:flex-col iphone_XR:w-[90%] items-center">
             <div className="w-full flex justify-center items-center gap-3 mt-8 p-3 iphone_XR:w-[90%]">
               <ArrowLeft
-                onClick={goToPreviousImage}
+                onClick={() => console.log("clicou")}
                 className="rounded-full bg-light_blue text-white hover:bg-opacity-60"
                 size={30}
               />
               <div className="flex w-[700px] h-[400px] justify-center items-center gap-2 relative object-contain">
-                {immobile?.ImageImovel && immobile?.ImageImovel.length > 0 ? (
-                  <Image
-                    src={immobile.ImageImovel[currentImageIndex]?.path || ""}
-                    fill={true}
-                    alt={`Imagem do imóvel`}
-                  />
+                {imovel?.ImageImovel && imovel?.ImageImovel.length > 0 ? (
+                  <Image src={srcImg} fill={true} alt={`Imagem do imóvel`} />
                 ) : (
-                  <p>Nenhuma imagem disponível</p>
+                  <div className="w-[700px] h-[400px] flex justify-center items-center border-2">
+                    <Image
+                      src={camera}
+                      alt="Imagem de uma câmera fotografica"
+                      width={70}
+                      height={70}
+                    />
+                  </div>
                 )}
               </div>
               <ArrowRight
-                onClick={goToNextImage}
+                onClick={() => console.log("clicou")}
                 className="rounded-full bg-light_blue text-white hover:bg-opacity-60"
                 size={30}
               />
@@ -265,7 +284,7 @@ export default function DetailingImmobiles({ params }: IParams) {
               <div className="flex justify-center mt-5 iphone_SE:w-full items-center">
                 <button
                   type="submit"
-                  className="w-80 h-10 bg-light_blue text-white mt-6 rounded-lg iphone_SE:w-[90%]">
+                  className="w-96 h-11 bg-light_blue text-white mt-6 rounded-lg iphone_SE:w-[90%]">
                   Salvar
                 </button>
               </div>

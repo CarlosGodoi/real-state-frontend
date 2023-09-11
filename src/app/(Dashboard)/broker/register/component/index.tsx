@@ -33,23 +33,34 @@ export default function RegisterBroker() {
   const onSubmitCreateAccount = async (data: FormData) => {
     setLoading(true);
     const userPerfil = isAuthenticated.user.perfil.toString();
-    if (userPerfil === "CORRETOR") {
-      registerBroker(data)
-        .then((res) => {
-          if (res) {
-            toast("corretor criado com sucesso!", {
-              hideProgressBar: true,
-              autoClose: 2000,
-              type: "success",
-              position: "top-right",
-              theme: "colored",
-            });
-            router.push("/immobiles");
-          }
-        })
-        .catch(informError("Não foi possível cadastrar na plataforma."))
-        .finally(() => setLoading(false));
+    console.log("PERFIL=>", userPerfil);
+
+    if (userPerfil !== "CORRETOR" && userPerfil !== "ADMIN") {
+      toast("corretor criado com sucesso!", {
+        hideProgressBar: true,
+        autoClose: 2000,
+        type: "success",
+        position: "top-right",
+        theme: "colored",
+      });
     }
+    registerBroker(data)
+      .then((res) => {
+        console.log("RESP=>", res?.data);
+
+        if (res) {
+          toast("corretor criado com sucesso!", {
+            hideProgressBar: true,
+            autoClose: 2000,
+            type: "success",
+            position: "top-right",
+            theme: "colored",
+          });
+          router.push("/immobiles");
+        }
+      })
+      .catch(() => informError("Ocorreu um erro ao tentar cadastrar os dados!"))
+      .finally(() => setLoading(false));
   };
 
   return (

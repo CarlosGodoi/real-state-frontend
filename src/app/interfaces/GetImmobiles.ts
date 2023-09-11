@@ -10,6 +10,7 @@ interface IAddress {
 }
 
 interface IImage {
+  id: string;
   path: string | StaticImport;
 }
 
@@ -26,3 +27,17 @@ interface IImmobiles {
 }
 
 export type { IImmobiles };
+
+interface IImmobile {
+  id: string;
+  tipoContrato: "VENDA" | "ALUGUEL";
+  quantidadeQuartos: number;
+  area: number;
+  preco: number;
+  status: StatusImovel;
+  createdAt: Date;
+  endereco: IAddress;
+  ImageImovel: IImage[];
+}
+
+export type { IImmobile };

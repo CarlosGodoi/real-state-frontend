@@ -81,7 +81,7 @@ export default function Immobiles() {
         <div className="w-[40%] flex items-center justify-center mt-6 iphone_SE:w-full iphone_XR:w-full">
           <button
             type="button"
-            className="w-[50%] h-8 rounded-full font-medium text-zinc-900 bg-dark_secondary hover:bg-medium_secondary desktop:w-[70%] laptop:w-[80%] iphone_SE:w-[70%] iphone_XR:w-[60%]"
+            className="w-[50%] h-8 rounded-full font-medium text-zinc-900 bg-dark_secondary hover:bg-medium_green desktop:w-[70%] laptop:w-[80%] iphone_SE:w-[70%] iphone_XR:w-[60%]"
             onClick={() => router.push("/immobiles/releases")}>
             Confira nossos lançamentos
           </button>

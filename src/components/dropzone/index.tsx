@@ -56,7 +56,7 @@ export const DropzoneImage: React.FC<IProps> = ({
   });
 
   return (
-    <div className="w-[90%] flex flex-col border-2 border-dark_blue rounded-lg iphone_XR:w-[90%] laptop:w-[70%] desktop:w-[80%] notebook_13p:w-[70%]">
+    <div className="w-[90%] flex flex-col border-2 border-dark_blue rounded-lg ipad:w-[90%] iphone_XR:w-[90%] laptop:w-[90%] desktop:w-[80%] notebook_13p:w-[90%]">
       <div className="w-full p-3 flex justify-center items-center bg-dark_blue text-white text-xl">
         <h2>Upload de imagens</h2>
       </div>

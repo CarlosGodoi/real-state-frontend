@@ -30,7 +30,7 @@ export const FormContact: React.FC = () => {
           resolve();
         }, 3000);
       });
-      toast("corretor criado com sucesso!", {
+      toast("Mensagem com sucesso!", {
         hideProgressBar: true,
         autoClose: 3000,
         type: "success",
@@ -38,7 +38,6 @@ export const FormContact: React.FC = () => {
         theme: "colored",
       });
       reset();
-      router.push("/contact");
     } catch (error) {
       toast("Ocorreu um erro ao enviar o formulário", {
         hideProgressBar: true,
@@ -122,7 +121,7 @@ export const FormContact: React.FC = () => {
             </div>
             <button
               type="submit"
-              className="flex justify-center items-center w-60 h-12 bg-light_blue text-white rounded-lg mt-6 iphone_SE:mt-3">
+              className="flex justify-center items-center w-96 h-12 bg-light_blue text-white rounded-lg mt-6 iphone_SE:mt-3">
               {loading ? <Loanding /> : "Enviar"}
             </button>
           </form>

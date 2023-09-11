@@ -74,7 +74,6 @@ export default function FormRegisterImmobile() {
     }
   };
 
-  console.log(images);
 
   return (
     <Container>
@@ -85,7 +84,7 @@ export default function FormRegisterImmobile() {
 
         <form
           onSubmit={handleSubmit(onSubmitCreateImmobile)}
-          className="w-1/2 flex flex-col items-center gap-4 desktop:w-[90%] iphone_SE:gap-3 iphone_XR:w-[90%]">
+          className="w-[60%] flex flex-col items-center gap-4 desktop:w-[90%] iphone_SE:gap-3 iphone_XR:w-[90%]">
           <h2 className="font-semibold text-4xl text-dark_blue mt-8">
             Cadastro de imóveis
           </h2>
@@ -193,7 +192,7 @@ export default function FormRegisterImmobile() {
           </div>
 
           <div className="w-[90%] flex items-center gap-4 iphone_SE:w-full iphone_XR:w-full flex-col ipad:flex-col">
-            <div className="w-full flex flex-col justify-center items-center">
+            <div className="w-full flex gap-4 justify-center items-center iphone_XR:flex-col">
               <select
                 className="w-full h-12 border-2 border-zinc-200 rounded-lg focus:border-blue-400 focus:outline-none ipad:w-[90%]"
                 {...register("tipoContrato")}>
@@ -208,9 +207,6 @@ export default function FormRegisterImmobile() {
                   {errors.tipoContrato.message}
                 </p>
               )}
-            </div>
-
-            <div className="w-full flex flex-col justify-center items-center">
               <select
                 className="w-full h-12 border-2 border-zinc-200 rounded-lg focus:border-blue-400 focus:outline-none ipad:w-[90%]"
                 {...register("status")}>
@@ -228,6 +224,8 @@ export default function FormRegisterImmobile() {
                 </p>
               )}
             </div>
+
+            <div className="w-full flex flex-col justify-center items-center"></div>
           </div>
 
           <div className="w-[90%] flex items-center gap-4 iphone_XR:flex-col ipad:flex-col">
