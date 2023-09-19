@@ -10,7 +10,7 @@ export const PageBack: React.FC<IProps> = ({ href }) => {
     <div className="flex p-2">
       <Link
         href={href}
-        className="flex items-center gap-1 border-b-2 border-medium_secondary mt-2">
+        className="flex items-center gap-1 border-b-2 border-amber-200 mt-2">
         <ArrowLeft size={20} className="text-dark_blue" />
         <p className="text-dark_blue">Voltar</p>
       </Link>

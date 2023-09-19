@@ -15,6 +15,7 @@ import { editImmobile } from "@/services/immobiles/edit";
 import { useRouter } from "next/navigation";
 import { getImmobileById } from "@/services/immobiles/getById";
 import camera from "../../../../../../../public/assets/camera.svg";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 interface IParams {
   params: {
@@ -52,7 +53,7 @@ export default function DetailingImmobiles({ params }: IParams) {
 
         setValue("area", resp.data.imovel.area);
         setValue("quantidadeQuartos", resp.data.imovel.quantidadeQuartos);
-        setValue("preco", resp?.data.imovel.preco);
+        setValue("preco", resp.data.imovel.preco);
         setValue("tipoContrato", resp?.data.imovel.tipoContrato);
         setValue("status", resp?.data.imovel.status);
 

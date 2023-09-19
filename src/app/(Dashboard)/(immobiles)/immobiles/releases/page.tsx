@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import useDebounce from "@/hooks/useDebounce";
 import Image from "next/image";
 import camera from "../../../../../../public/assets/camera.svg";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 export default function Releases() {
   const { apiRequest } = useRequest();
@@ -206,7 +207,7 @@ export default function Releases() {
 
                   <p className="font-normal text-sm text-white">A partir de:</p>
                   <span className="font-body text-white">
-                    R${immobile.preco}
+                    {formatCurrency(immobile.preco)}
                   </span>
                 </div>
               </div>

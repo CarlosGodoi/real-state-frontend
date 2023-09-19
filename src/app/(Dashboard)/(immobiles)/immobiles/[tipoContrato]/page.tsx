@@ -15,6 +15,7 @@ import { deleteImmobileById } from "@/services/immobiles/delete";
 import { toast } from "react-toastify";
 import Container from "@/components/container";
 import { PageBack } from "@/components/pageBack";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 interface IParams {
   params: {
@@ -200,7 +201,7 @@ export default function Page({ params }: IParams) {
                       A partir de:
                     </p>
                     <span className="font-body text-white">
-                      R${immobile.preco}
+                      {formatCurrency(immobile.preco)}
                     </span>
                   </div>
                 </div>
