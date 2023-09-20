@@ -50,8 +50,6 @@ export default function Immobiles() {
     })();
   }, []);
 
-  console.log(immobiles);
-
   return (
     <>
       <div className="w-full h-screen flex flex-col justify-center items-center bg-home_bg bg-no-repeat bg-cover iphone_XR:h-[90%] iphone_SE:w-full pt-28 pb-28">
@@ -145,9 +143,9 @@ export default function Immobiles() {
           </div>
         </div>
       </div>
-      <div className="w-full flex flex-col items-center bg-medium_secondary gap-4 pt-[120px] pb-[120px]">
+      <div className="w-full flex flex-col items-center bg-medium_gray gap-4 pt-[120px] pb-[120px]">
         <div className="mb-4">
-          <h2 className="font-sans text-4xl text-zinc-100">
+          <h2 className="font-sans text-4xl text-dark_blue font-bold">
             Imóveis de alto padrão
           </h2>
         </div>

@@ -12,7 +12,7 @@ export const Header: React.FC = () => {
     width: "(max-width: 415px), (max-width: 767px)",
   });
   return (
-    <div className="w-full bg-medium_gray flex justify-between items-center p-2 opacity-60">
+    <div className="w-full bg-medium_gray flex justify-between items-center p-2 ">
       <h2 className="text-2xl text-zinc-100 border-b-2 border-amber-200">
         <Link href={"/immobiles"}>Real State</Link>
       </h2>

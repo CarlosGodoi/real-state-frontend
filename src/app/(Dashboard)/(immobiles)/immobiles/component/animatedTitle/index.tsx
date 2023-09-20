@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
 export const AnimatedTitle = () => {
   const [ref, inView] = useInView({
@@ -10,11 +10,10 @@ export const AnimatedTitle = () => {
   return (
     <motion.h1
       ref={ref}
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: inView ? 0 : -100, opacity: inView ? 1 : 0 }}
-      transition={{ duration: 0.9, delay: 0.7 }}
-      className="font-serif text-6xl text-medium_secondary mt-4 iphone_SE:text-center"
-    >
+      initial={{ y: -150, opacity: 0 }}
+      animate={{ y: inView ? 0 : -150, opacity: inView ? 1 : 0 }}
+      transition={{ duration: 0.9, delay: 0.8 }}
+      className="font-serif text-6xl text-black mt-4 iphone_SE:text-center">
       Quem somos?
     </motion.h1>
   );

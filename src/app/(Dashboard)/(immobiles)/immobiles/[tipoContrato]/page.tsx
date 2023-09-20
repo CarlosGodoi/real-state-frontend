@@ -192,7 +192,7 @@ export default function Page({ params }: IParams) {
                         <Trash
                           size={25}
                           className="text-white font-bold cursor-pointer"
-                          onClick={() => console.log("clicou")}
+                          onClick={() => handleDelete(immobile.id)}
                         />
                       </div>
                     )}

@@ -15,20 +15,21 @@ module.exports = {
         primary: "#DAD10B",
         secondary: "#79A072",
 
-        medium_gray: "#A7A7A7",
+        light_blue: "#345499",
+        medium_gray: "#D6D1C3",
+
         medium_secondary: "#B3B17B",
         medium_blue: "#23243F",
-
-        light_blue: "#345499",
-
         medium_green: "#9DCE8C",
+
         dark_secondary: "#7FB06F",
         dark_blue: "#31364E",
       },
       backgroundImage: {
         login_bg: "url(../../public/assets/login_bg1.jpeg)",
-        home_bg: "url(../../public/assets/home_bg1.jpeg)",
-        contact_bg: "url(../../public/assets/contact_img.jpg)",
+        home_bg: "url(../../public/assets/home_bg1.1.jpeg)",
+        // contact_bg: "url(../../public/assets/contact_img.jpg)",
+        contact_bg: "url(../../public/assets/contato_bg.jpeg)",
       },
       screens: {
         notebook_13p: { max: "1367px" },
