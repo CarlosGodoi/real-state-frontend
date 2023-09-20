@@ -1,8 +1,7 @@
 "use client";
 
-import { IImmobile, IImmobiles } from "@/app/interfaces/GetImmobiles";
+import { IImmobile } from "@/app/interfaces/GetImmobiles";
 import { PageBack } from "@/components/pageBack";
-import { getAllImmobiles } from "@/services/immobiles/getAll";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -24,15 +23,11 @@ interface IParams {
 }
 
 export default function DetailingImmobiles({ params }: IParams) {
-  console.log(params.id);
-
   const [loading, setLoading] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const isAuthenticated = useAuthContext();
   const router = useRouter();
   const [imovel, setImovel] = useState<IImmobile>();
-  console.log("IMOVEL=>", imovel);
 
   const {
     handleSubmit,
@@ -50,8 +45,6 @@ export default function DetailingImmobiles({ params }: IParams) {
     getImmobileById(params.id).then((resp) => {
       setImovel(resp?.data.imovel);
       if (resp) {
-        console.log(resp.data.imovel);
-
         setValue("area", resp.data.imovel.area);
         setValue("quantidadeQuartos", resp.data.imovel.quantidadeQuartos);
         setValue("preco", resp.data.imovel.preco);
@@ -71,7 +64,6 @@ export default function DetailingImmobiles({ params }: IParams) {
     imovel?.ImageImovel && imovel.ImageImovel[currentImageIndex]
       ? `http://localhost:3334/${imovel.ImageImovel[currentImageIndex].path}`
       : "";
-  console.log("CURRENT_IDX=>", currentImageIndex);
 
   const goToNextImage = () => {
     if (imovel?.ImageImovel) {
@@ -105,7 +97,6 @@ export default function DetailingImmobiles({ params }: IParams) {
 
   const handleEdit = async ({ preco, tipoContrato, status }: FormData) => {
     setLoading(true);
-    console.log("DATA=>", preco, tipoContrato, status);
 
     try {
       await editImmobile(params.id, { preco, tipoContrato, status });
