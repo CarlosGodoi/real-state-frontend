@@ -25,13 +25,14 @@ interface IParams {
 
 export default function DetailingImmobiles({ params }: IParams) {
   console.log(params.id);
-  const [matchedImmobile, setMatchedImmobile] = useState<IImmobiles[]>([]);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const immobile = matchedImmobile.find((item) => item.id === params.id);
+
   const isAuthenticated = useAuthContext();
   const router = useRouter();
   const [imovel, setImovel] = useState<IImmobile>();
+  console.log("IMOVEL=>", imovel);
 
   const {
     handleSubmit,
@@ -70,31 +71,37 @@ export default function DetailingImmobiles({ params }: IParams) {
     imovel?.ImageImovel && imovel.ImageImovel[currentImageIndex]
       ? `http://localhost:3334/${imovel.ImageImovel[currentImageIndex].path}`
       : "";
+  console.log("CURRENT_IDX=>", currentImageIndex);
 
-  // const goToNextImage = () => {
-  //   if (imovel?.ImageImovel) {
-  //     let indexActual = imovel.ImageImovel.findIndex((el) => +el.id === id);
+  const goToNextImage = () => {
+    if (imovel?.ImageImovel) {
+      let indexActual =
+        imovel?.ImageImovel.findIndex((el) => +el.id === currentImageIndex) + 1;
 
-  //     if (indexActual !== -1) {
-  //       let nextIndex = indexActual + 1;
-  //       if (nextIndex >= imovel.ImageImovel.length) {
-  //         nextIndex = 0; // Voltar para a primeira imagem se chegarmos ao final do array
-  //       }
-  //       // setCurrentImageIndex(imovel.ImageImovel[nextIndex]?.id);
-  //       // console.log(
-  //       //   "entrei aqui",
-  //       //   imovel.ImageImovel && imovel.ImageImovel[nextIndex]?.id
-  //       // );
-  //       console.log("nextIndex:", nextIndex);
-  //     }
-  //   }
-  // };
+      if (indexActual !== -1) {
+        let nextIndex =
+          currentImageIndex + 1 < imovel.ImageImovel.length
+            ? currentImageIndex + 1
+            : currentImageIndex;
 
-  // const goToPreviousImage = () => {
-  //   setCurrentImageIndex(
-  //     (prevIndex) => (prevIndex - 1 + totalImages) % totalImages
-  //   );
-  // };
+        setCurrentImageIndex(nextIndex);
+      }
+    }
+  };
+
+  const goToPreviousImage = () => {
+    if (imovel?.ImageImovel) {
+      let indexActual =
+        imovel?.ImageImovel.findIndex((el) => +el.id === currentImageIndex) + 1;
+
+      if (indexActual === 0) {
+        let previousIndex =
+          currentImageIndex - 1 > 0 ? currentImageIndex - 1 : 0;
+
+        setCurrentImageIndex(previousIndex);
+      }
+    }
+  };
 
   const handleEdit = async ({ preco, tipoContrato, status }: FormData) => {
     setLoading(true);
@@ -130,7 +137,7 @@ export default function DetailingImmobiles({ params }: IParams) {
             className="w-[50%] flex flex-col justify-between gap-3 pt-10 pb-10 laptop:flex-col iphone_XR:w-[90%] items-center">
             <div className="w-full flex justify-center items-center gap-3 mt-8 p-3 iphone_XR:w-[90%]">
               <ArrowLeft
-                onClick={() => console.log("clicou")}
+                onClick={goToPreviousImage}
                 className="rounded-full bg-light_blue text-white hover:bg-opacity-60"
                 size={30}
               />
@@ -149,7 +156,7 @@ export default function DetailingImmobiles({ params }: IParams) {
                 )}
               </div>
               <ArrowRight
-                onClick={() => console.log("clicou")}
+                onClick={goToNextImage}
                 className="rounded-full bg-light_blue text-white hover:bg-opacity-60"
                 size={30}
               />
