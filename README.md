@@ -1,4 +1,8 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Projeto desenvolvido para testes de API desenvolvida
+
+### Tecnologias utilizadas
+- Next 13 para estudo
+- Tailwind para estudo
 
 ## Getting Started
 
